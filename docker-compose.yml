@@ -1,0 +1,50 @@
+version: "2.2"
+
+services:
+
+  consul:
+    image: registry.ooflex.net/consul
+    container_name: consul
+    ports:
+      - 8400:8400
+      - 8500:8500
+      - 54:8600/udp
+    environment:
+      - IP=${FLEX_IP}
+
+  registrator:
+    image: registry.ooflex.net/registrator
+    container_name: service_registrator
+    volumes:
+      - /var/run/:/tmp/
+    environment:
+      - IP=${FLEX_IP}
+    depends_on:
+      consul:
+          condition: service_healthy
+
+  rabbitmq:
+    image: registry.ooflex.net/rabbitmq
+    container_name: rabbitmq
+    ports:
+      - 4369:4369
+      - 5672:5672
+      - 15672:15672
+      - 25672:25672
+    environment:
+      - IP=${FLEX_IP}
+    depends_on:
+      consul:
+        condition: service_healthy
+
+  redis:
+    image: registry.ooflex.net/redis
+    container_name: redis
+    ports:
+      - 6379:6379
+      - 16379:16379
+    environment:
+      - IP=${FLEX_IP}
+    depends_on:
+      consul:
+        condition: service_healthy
