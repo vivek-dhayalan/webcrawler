@@ -29,8 +29,6 @@ public class CrawlerMQConfiguration {
     private static final String CRAWLER_DLX = "assignment.webcrawler.dlx";
     private static final String CRAWLER_DLQ = "assignment.webcrawler.request.dlq";
 
-    private static final String JOB_REQUEST_EXCHANGE = "flex.job.executor.request.exchange";
-
     private static final int NUMBER_OF_CONCURRENT_CONSUMERS = 20;
 
     public static final int MAX_PRIORITY = 10;
@@ -42,7 +40,7 @@ public class CrawlerMQConfiguration {
     }
 
     @Bean
-    public SimpleMessageListenerContainer flexJobRequestMessageListenerContainer(ConnectionFactory connectionFactory) {
+    public SimpleMessageListenerContainer crawlRequestMessageListenerContainer(ConnectionFactory connectionFactory) {
 
         SimpleMessageListenerContainer messageListenerContainer = new SimpleMessageListenerContainer(connectionFactory);
         messageListenerContainer.setQueues(crawlerRequestQueue());
@@ -65,7 +63,7 @@ public class CrawlerMQConfiguration {
     }
 
     @Bean
-    public Binding bindingFlexJobRequestQueue() {
+    public Binding bindingCrawlerRequestQueue() {
 
         return BindingBuilder.bind(crawlerRequestQueue()).to(crawlerExchange()).withQueueName();
     }
